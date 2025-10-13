@@ -1,0 +1,6 @@
+sudo docker stop tamburin_admin
+sudo docker rm tamburin_admin
+sudo docker image rm tamburin_admin
+sudo docker build -t tamburin_admin .
+sudo docker run -d -p 8080:8080 --name tamburin_admin tamburin_admin
+sudo docker logs --follow tamburin_admin

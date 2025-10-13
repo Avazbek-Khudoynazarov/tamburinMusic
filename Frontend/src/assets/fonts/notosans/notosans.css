@@ -1,0 +1,57 @@
+/*
+Copyright (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard.
+https://github.com/orioncactus/pretendard
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+*/
+@font-face {
+  font-family: 'notosans';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: local('NotoSans-Light'),
+       url('./NotoSans-Light.woff2') format('woff2'),
+       url('./NotoSans-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'notosans';
+  font-style: normal;
+  font-weight: 350;
+  font-display: swap;
+  src: local('NotoSans-DemiLight'),
+       url('./NotoSans-DemiLight.woff2') format('woff2'),
+       url('./NotoSans-DemiLight.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'notosans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('NotoSans-Regular'),
+       url('./NotoSans-Regular.woff2') format('woff2'),
+       url('./NotoSans-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'notosans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('NotoSans-Medium'),
+       url('./NotoSans-Medium.woff2') format('woff2'),
+       url('./NotoSans-Medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'notosans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('NotoSans-Bold'),
+       url('./NotoSans-Bold.woff2') format('woff2'),
+       url('./NotoSans-Bold.woff') format('woff');
+}

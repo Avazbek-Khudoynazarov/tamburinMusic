@@ -1,0 +1,94 @@
+@charset "UTF-8";
+
+
+.css-1b56t3c-MuiStack-root .nml__editor__content__root .tiptap.ProseMirror {
+	padding: 15px 16px !important;
+}
+.css-3qqnt2-MuiContainer-root {
+	height:1100px;
+}
+.fc .fc-scroller-liquid-absolute {
+	overflow: visible !important;
+}
+
+/* 캘린더 */
+.fc.fc-media-screen {
+	height:1000px;
+}
+.css-15a5exn .fc .fc-event .fc-event-time {
+	order:2;
+}
+
+.css-15a5exn .fc .fc-event .fc-event-main-frame{ 
+	/* color:#fff;	 */
+	/* font-weight:bold; */
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.css-15a5exn .fc .fc-daygrid-event .fc-event-title {
+	padding-right:10px;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+	background-color: #e8f5e9;
+}
+
+.css-7d7xpv {
+	background:#f4f6f8 ;
+}
+
+/* 전체 테이블 중앙 정렬 */
+.css-fmhsy5-MuiTable-root .css-1gnf9s2-MuiTableCell-root, .css-fmhsy5-MuiTable-root .css-nokws5-MuiTableCell-root {
+	text-align:center;
+}
+
+@media (min-width: 1200px) {
+	/* 헤더 */
+	.css-1a8pz0p-MuiToolbar-root {
+		height:0px !important;
+	}
+	.css-1qdyawl-MuiContainer-root {
+		height:0px !important;
+	}
+	.css-8axiat-MuiToolbar-root { 
+		height:0px !important;
+	}
+	/* 헤더바 */
+	.MuiBox-root .css-9yuykr-MuiTypography-root {
+		font-size:18px;
+		margin-bottom:6px;
+	}
+	.css-hy2np-MuiTypography-root-MuiLink-root {
+		font-size:12px;
+	}
+	.MuiBox-root .css-cnvj7y {
+		width:16px;
+		height:16px;
+	}
+	.MuiBox-root .css-1prk6b7-MuiButtonBase-root-MuiButton-root {
+		font-size:13px;
+	}
+
+	/* 사이드바 */
+	.MuiBox-root .css-fpm5xu-MuiButtonBase-root .mnl__nav__item__title, .MuiBox-root .css-yx2ljk-MuiButtonBase-root .mnl__nav__item__title {
+		font-size:13px;
+	}
+
+	.MuiBox-root .css-fpm5xu-MuiButtonBase-root .mnl__nav__item__icon > span, .MuiBox-root .css-yx2ljk-MuiButtonBase-root .mnl__nav__item__icon > span {
+		width:20px !important;
+		height:20px !important;
+	}
+
+	/* 테이블 헤더 */
+	.css-i2mng2-MuiTableRow-root:last-of-type .MuiTableCell-root {
+		background:#eceff2;
+	}
+}
+
+@media (max-width: 767px) {
+	.css-1a8pz0p-MuiToolbar-root, .css-8axiat-MuiToolbar-root {
+		height:50px !important;
+	}
+}
+
+

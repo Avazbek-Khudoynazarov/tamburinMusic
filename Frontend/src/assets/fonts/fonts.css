@@ -1,0 +1,11 @@
+/* @import url("Pretendard-1.3.3/pretendard.css");
+:root {
+	--font-family : 'Pretendard';
+}
+* { font-family: var(--font-family); } */
+
+@import url("notosans/notosans.css");
+:root {
+	--font-family : 'notosans';
+}
+* { font-family: var(--font-family); }

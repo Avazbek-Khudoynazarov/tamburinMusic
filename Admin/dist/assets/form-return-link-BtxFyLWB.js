@@ -1,0 +1,1 @@
+import{D as i,$ as s,X as a,Z as l}from"./index-DJm73Gd8.js";function u({sx:n,href:t,children:c,label:r,icon:e,...o}){return i.jsxs(s,{component:a,href:t,color:"inherit",variant:"subtitle2",sx:{mt:3,gap:.5,mx:"auto",alignItems:"center",display:"inline-flex",...n},...o,children:[e||i.jsx(l,{width:16,icon:"eva:arrow-ios-back-fill"}),r||"Return to sign in"]})}export{u as F};

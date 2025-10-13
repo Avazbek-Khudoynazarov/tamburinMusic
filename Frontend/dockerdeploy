@@ -1,0 +1,6 @@
+sudo docker stop tamburin_front
+sudo docker rm tamburin_front
+sudo docker image rm tamburin_front
+sudo docker build -t tamburin_front .
+sudo docker run -d -p 3000:3000 --name tamburin_front tamburin_front
+sudo docker logs --follow tamburin_front

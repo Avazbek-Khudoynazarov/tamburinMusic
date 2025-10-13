@@ -1,0 +1,29 @@
+/* Text.css */
+.text-primary {
+	color: #1976d2; /* Replace with desired primary color */
+  }
+  
+  .text-secondary {
+	color: #9c27b0; /* Replace with desired secondary color */
+  }
+  
+  .text-success {
+	color: #4caf50; /* Replace with desired success color */
+  }
+  
+  .text-warning {
+	color: #ff9800; /* Replace with desired warning color */
+  }
+  
+  .text-error {
+	color: #f44336; /* Replace with desired error color */
+  }
+  
+  .text-info {
+	color: #2196f3; /* Replace with desired info color */
+  }
+  
+  .text-black {
+	color: #000000; /* Black color */
+  }
+  
