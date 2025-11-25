@@ -55,6 +55,7 @@
     "axios": "^1.7.5",
     "browser-image-compression": "^1.0.17",
     "clsx": "1.1.1",
+    "crypto-js": "^4.2.0",
     "date-fns": "2.25.0",
     "dayjs": "^1.11.13",
     "embla-carousel-auto-height": "^8.5.2",
@@ -108,6 +109,7 @@
   },
   "devDependencies": {
     "@types/autosuggest-highlight": "^3.2.3",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.4.2",
     "@types/nprogress": "^0.2.3",
     "@types/numeral": "2.0.2",

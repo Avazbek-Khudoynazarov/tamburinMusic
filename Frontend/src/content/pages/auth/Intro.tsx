@@ -35,21 +35,31 @@ function Intro() {
 	useEffect(() => {
 		const clientId = import.meta.env.VITE_NAVER_CLIENT_ID;
 		const callbackUrl = import.meta.env.VITE_NAVER_REDIRECT_URI;
+		const kakaoKey = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY;
 
-		const initializeNaverLogin = () => {
-			const naverLogin = new naver.LoginWithNaverId({
-				clientId,
-				callbackUrl,
-				callbackHandle: true,
-				loginButton: { color: "green", type: 0, height: "44" },
-			});
-			naverLogin.init();
-			naverLogin.logout();
-		};
-		initializeNaverLogin();
+		// Initialize Naver Login only if credentials are provided
+		if (clientId && callbackUrl && naver) {
+			try {
+				const naverLogin = new naver.LoginWithNaverId({
+					clientId,
+					callbackUrl,
+					callbackHandle: true,
+					loginButton: { color: "green", type: 0, height: "44" },
+				});
+				naverLogin.init();
+				naverLogin.logout();
+			} catch (error) {
+				console.warn('Naver login initialization failed:', error);
+			}
+		}
 
-		if (!Kakao.isInitialized()) {
-			Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+		// Initialize Kakao only if key is provided
+		if (kakaoKey && Kakao && !Kakao.isInitialized()) {
+			try {
+				Kakao.init(kakaoKey);
+			} catch (error) {
+				console.warn('Kakao initialization failed:', error);
+			}
 		}
 
 		setVisible(true);
@@ -60,6 +70,11 @@ function Intro() {
 
 
 	const KakaoLogin = () => {
+		if (!window.Kakao || !window.Kakao.isInitialized()) {
+			alert('카카오 로그인 서비스가 설정되지 않았습니다. 관리자에게 문의하세요.');
+			return;
+		}
+
 		window.Kakao.Auth.login({
 			success: async function (data) {
 				AuthService.loginBySocial('kakao', data.access_token).then((data) => {
