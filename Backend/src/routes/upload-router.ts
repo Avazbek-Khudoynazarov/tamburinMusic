@@ -15,7 +15,7 @@ const storageService = new S3StorageService();
 const upload_s3 = multer({
     storage: multerS3({
         s3: storageService.GetS3Client(),
-        bucket: 'tamburinstudio-storage',
+        bucket: storageService.getBucketName(),
         key: function (req: Request, file, cb) {
             let folder: string = req.path.substring(1).split('/')[1];
             var destFile = folder + '/' + folder + '_[' + dayjs().format('YYYY-MM-DD') + ']_' + dayjs().format('HH_mm_ss') + '_' + file.originalname;

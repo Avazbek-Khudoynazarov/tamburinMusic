@@ -1,24 +1,35 @@
 import aws, { S3 } from 'aws-sdk';
 import { S3Client } from '@aws-sdk/client-s3';
 import dayjs from 'dayjs';
-import fs from 'fs';
 
 export class S3StorageService {
   private s3: aws.S3;
   private s3Config: S3Client;
+  private bucketName: string;
 
   constructor() {
-    const jsonFile = fs.readFileSync('./awsconfig.json', 'utf8');
-    const jsonData = JSON.parse(jsonFile);
+    // Use environment variables for AWS credentials
+    const accessKeyId = process.env.AWS_ACCESS_KEY_ID || '';
+    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || '';
+    const region = process.env.AWS_REGION || 'us-east-2';
+    this.bucketName = process.env.AWS_S3_BUCKET || 'tamburinstudio-storage';
 
-    aws.config.loadFromPath("./awsconfig.json");
+    // Configure AWS SDK v2
+    aws.config.update({
+      accessKeyId,
+      secretAccessKey,
+      region
+    });
+
     this.s3 = new aws.S3();
+
+    // Configure AWS SDK v3
     this.s3Config = new S3Client({
-      region: jsonData.region,
-      credentials:{
-         accessKeyId: jsonData.accessKeyId,
-         secretAccessKey: jsonData.secretAccessKey
-     }
+      region,
+      credentials: {
+        accessKeyId,
+        secretAccessKey
+      }
     });
   }
 
@@ -26,10 +37,14 @@ export class S3StorageService {
     return this.s3Config;
   }
 
+  public getBucketName() {
+    return this.bucketName;
+  }
+
   public uploadLocalFile(fileName: string, fileBody: any): Promise<string> {
     return new Promise((resolve, reject) => {
       const params = {
-        Bucket: 'tamburinstudio-storage',
+        Bucket: this.bucketName,
         Key: 'images/' + fileName,
         ACL: 'public-read',
         Body: fileBody
@@ -50,7 +65,7 @@ export class S3StorageService {
   public getSingedPutUrl(folder: string, fileName: string, expires: number): Promise<string> {
     return new Promise((resolve, reject) => {
       const params = {
-        Bucket: 'tamburinstudio-storage',
+        Bucket: this.bucketName,
         //Key: fileName,
         Key: 'images/' + folder + '/[' + dayjs().format('YYYY-MM-DD') + ']' + '/' + dayjs().format('HH_mm_ss') + '_' + fileName,
         Expires: expires,
@@ -72,7 +87,7 @@ export class S3StorageService {
   public deleteObject(objectKey: string): Promise<string> {
     return new Promise((resolve, reject) => {
       var params = {
-        Bucket: 'tamburinstudio-storage',
+        Bucket: this.bucketName,
         Key: objectKey
       };
 
@@ -93,7 +108,7 @@ export class S3StorageService {
       params = requestParams;
     }else{
       params = {
-        Bucket: 'tamburinstudio-storage',
+        Bucket: this.bucketName,
         Prefix: folder + '/'
       };
     }
@@ -103,7 +118,7 @@ export class S3StorageService {
         return '';
     }else{
       let deleteParams = {
-        "Bucket": 'tamburinstudio-storage',
+        "Bucket": this.bucketName,
         "Delete": { "Objects": listedObjects.Contents!.map(a => ({ "Key": a.Key! })) }
       };
 
