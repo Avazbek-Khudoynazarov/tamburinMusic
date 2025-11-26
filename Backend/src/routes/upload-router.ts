@@ -8,24 +8,21 @@ import fs from 'fs';
 
 const router = Router();
 
+// AWS S3 Storage Service
+const storageService = new S3StorageService();
 
-const upload_local = multer({
-    storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-						let folder: string = req.path.substring(1).split('/')[1];
-						const uploadPath = `uploads/${folder}/`;
-
-            // 폴더가 없으면 생성
-            if (!fs.existsSync(uploadPath)) {
-                fs.mkdirSync(uploadPath, { recursive: true }); // 재귀적으로 경로 생성
-            }
-
-            cb(null, uploadPath);
-        },
-        filename: function (req, file, cb) {
+// S3 File Upload Configuration
+const upload_s3 = multer({
+    storage: multerS3({
+        s3: storageService.GetS3Client(),
+        bucket: 'tamburinstudio-storage',
+        key: function (req: Request, file, cb) {
             let folder: string = req.path.substring(1).split('/')[1];
-            cb(null, folder + '_[' + dayjs().format('YYYY-MM-DD') + ']_' + dayjs().format('HH_mm_ss') + '_' + file.originalname);
-        }
+            var destFile = folder + '/' + folder + '_[' + dayjs().format('YYYY-MM-DD') + ']_' + dayjs().format('HH_mm_ss') + '_' + file.originalname;
+            cb(null, destFile);
+        },
+        acl: 'public-read',
+        contentType: multerS3.AUTO_CONTENT_TYPE,
     }),
     limits: {
         files: 15,
@@ -33,26 +30,28 @@ const upload_local = multer({
     }
 });
 
-//로컬 파일 업로드
+// S3 파일 업로드
 router.use('/data/:folder', verifyToken);
-router.post('/data/:folder', upload_local.single('file'), async (request: Request, response: Response) => {
+router.post('/data/:folder', upload_s3.single('file'), async (request: Request, response: Response) => {
     // #swagger.tags = ['upload']
     try {
         if (!request.file) {
             return response.status(400).send('파일이 업로드되지 않았습니다.');
         }
 
-        // request.file이 undefined가 아닌 것을 확인한 후에 접근
-        const filePath = request.file.path;
-        const fileName = request.file.filename;
+        // S3에 업로드된 파일 정보
+        const s3File = request.file as any;
+        const fileUrl = s3File.location; // S3 파일 URL
+        const fileKey = s3File.key; // S3 파일 키
 
-        if (!filePath || !fileName) {
+        if (!fileUrl || !fileKey) {
             throw new Error('파일 정보가 올바르지 않습니다.');
         }
 
         response.status(200).send({
-            filename: fileName,
-            path: filePath
+            filename: fileKey,
+            url: fileUrl,
+            path: fileUrl
         });
     } catch (error) {
         console.error('파일 업로드 에러:', error);
@@ -61,8 +60,59 @@ router.post('/data/:folder', upload_local.single('file'), async (request: Reques
 });
 
 
-
-// const storageService = new S3StorageService();
+// ==================== LOCAL STORAGE (DISABLED) ====================
+// Uncomment below to switch back to local file storage
+// const upload_local = multer({
+//     storage: multer.diskStorage({
+//         destination: function (req, file, cb) {
+// 						let folder: string = req.path.substring(1).split('/')[1];
+// 						const uploadPath = `uploads/${folder}/`;
+//
+//             // 폴더가 없으면 생성
+//             if (!fs.existsSync(uploadPath)) {
+//                 fs.mkdirSync(uploadPath, { recursive: true }); // 재귀적으로 경로 생성
+//             }
+//
+//             cb(null, uploadPath);
+//         },
+//         filename: function (req, file, cb) {
+//             let folder: string = req.path.substring(1).split('/')[1];
+//             cb(null, folder + '_[' + dayjs().format('YYYY-MM-DD') + ']_' + dayjs().format('HH_mm_ss') + '_' + file.originalname);
+//         }
+//     }),
+//     limits: {
+//         files: 15,
+//         fileSize: 1024 * 1024 * 20, //20MB
+//     }
+// });
+//
+// //로컬 파일 업로드
+// router.use('/data/:folder', verifyToken);
+// router.post('/data/:folder', upload_local.single('file'), async (request: Request, response: Response) => {
+//     // #swagger.tags = ['upload']
+//     try {
+//         if (!request.file) {
+//             return response.status(400).send('파일이 업로드되지 않았습니다.');
+//         }
+//
+//         // request.file이 undefined가 아닌 것을 확인한 후에 접근
+//         const filePath = request.file.path;
+//         const fileName = request.file.filename;
+//
+//         if (!filePath || !fileName) {
+//             throw new Error('파일 정보가 올바르지 않습니다.');
+//         }
+//
+//         response.status(200).send({
+//             filename: fileName,
+//             path: filePath
+//         });
+//     } catch (error) {
+//         console.error('파일 업로드 에러:', error);
+//         response.status(500).send('파일 업로드 중 오류가 발생했습니다.');
+//     }
+// });
+// ==================== END LOCAL STORAGE ====================
 
 // const s3upload_images = multer({ 
 //     storage: multerS3({

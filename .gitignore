@@ -64,6 +64,10 @@ tsconfig.tsbuildinfo
 .env
 production.env
 
+# AWS credentials - NEVER commit these!
+Backend/awsconfig.json
+awsconfig.json
+
 # build module
 node_modules/
 !nodes_modules/.prisma
@@ -90,3 +94,8 @@ db-data
 src/database/migrations/**
 
 Backend/dist/*
+Admin/dist/
+Frontend/dist/
+
+# Claude Code settings
+.claude/

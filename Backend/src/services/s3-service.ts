@@ -29,9 +29,9 @@ export class S3StorageService {
   public uploadLocalFile(fileName: string, fileBody: any): Promise<string> {
     return new Promise((resolve, reject) => {
       const params = {
-        Bucket: 'tamburin-store',
+        Bucket: 'tamburinstudio-storage',
         Key: 'images/' + fileName,
-        ACL: 'public-read', 
+        ACL: 'public-read',
         Body: fileBody
       };
 
@@ -50,7 +50,7 @@ export class S3StorageService {
   public getSingedPutUrl(folder: string, fileName: string, expires: number): Promise<string> {
     return new Promise((resolve, reject) => {
       const params = {
-        Bucket: 'tamburin-store',
+        Bucket: 'tamburinstudio-storage',
         //Key: fileName,
         Key: 'images/' + folder + '/[' + dayjs().format('YYYY-MM-DD') + ']' + '/' + dayjs().format('HH_mm_ss') + '_' + fileName,
         Expires: expires,
@@ -71,17 +71,17 @@ export class S3StorageService {
 
   public deleteObject(objectKey: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      var params = {  
-        Bucket: 'tamburin-store', 
-        Key: objectKey 
+      var params = {
+        Bucket: 'tamburinstudio-storage',
+        Key: objectKey
       };
 
       this.s3.deleteObject(params, function (err: aws.AWSError, result: aws.S3.Types.DeleteObjectOutput) {
         if(err) {
-          console.warn(err);  
+          console.warn(err);
           reject(err);
         }else{
-          resolve(objectKey);  
+          resolve(objectKey);
         }
       });
     });
@@ -92,8 +92,8 @@ export class S3StorageService {
     if(requestParams != null) {
       params = requestParams;
     }else{
-      params = {  
-        Bucket: 'tamburin-store', 
+      params = {
+        Bucket: 'tamburinstudio-storage',
         Prefix: folder + '/'
       };
     }
@@ -103,7 +103,7 @@ export class S3StorageService {
         return '';
     }else{
       let deleteParams = {
-        "Bucket": 'tamburin-store', 
+        "Bucket": 'tamburinstudio-storage',
         "Delete": { "Objects": listedObjects.Contents!.map(a => ({ "Key": a.Key! })) }
       };
 

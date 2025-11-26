@@ -63,6 +63,7 @@
     "@tiptap/pm": "^2.6.5",
     "@tiptap/react": "^2.6.5",
     "@tiptap/starter-kit": "^2.6.5",
+    "@vitejs/plugin-react": "^4.7.0",
     "apexcharts": "^3.52.0",
     "autosuggest-highlight": "^3.3.4",
     "aws-amplify": "^6.5.1",

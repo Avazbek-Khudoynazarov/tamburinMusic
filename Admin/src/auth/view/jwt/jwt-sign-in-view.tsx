@@ -51,6 +51,9 @@ export function JwtSignInView() {
 
 	const { checkUserSession } = useAuthContext();
 
+	// Admin authentication bypass for local development
+	const requireAdminAuth = import.meta.env.VITE_REQUIRE_ADMIN_AUTH !== 'false';
+
 	const [authCode, setAuthCode] = useState('');
 
 	const [errorMsg, setErrorMsg] = useState('');
@@ -79,32 +82,33 @@ export function JwtSignInView() {
 	const onSubmit = handleSubmit(async (data) => {
 		try {
 
-			if (!authCode || authCode.length !== 6) {
-				alert('올바른 인증번호를 입력해주세요.');
-				return;
+			// Skip email verification if admin auth is disabled
+			if (requireAdminAuth) {
+				if (!authCode || authCode.length !== 6) {
+					alert('올바른 인증번호를 입력해주세요.');
+					return;
+				}
+
+				const result = await MemberService.verificateMail('classictalk@naver.com', authCode);
+				if (result && result.length > 0 && result[0].id) {
+					await MemberService.certifyMail(result[0]);
+				} else {
+					alert("올바른 인증번호를 입력해주세요.");
+					return;
+				}
 			}
 
-
-
-
-			const result = await MemberService.verificateMail('classictalk@naver.com', authCode);
-			if (result && result.length > 0 && result[0].id) {
-				await MemberService.certifyMail(result[0]);
-
-				AuthService.login(data.admin_id, data.password).then((resultData: any) => {
-					if (resultData.type !== "success") {
-						setErrorMsg(resultData.message);
-					} else {
-						setAdmin(resultData.admin);
-						setAuthenticated(true);
-						setErrorMsg('');
-						navigate("/");
-					}
-				});
-
-			} else {
-				alert("올바른 인증번호를 입력해주세요.");
-			}
+			// Proceed with login (with or without email verification)
+			AuthService.login(data.admin_id, data.password).then((resultData: any) => {
+				if (resultData.type !== "success") {
+					setErrorMsg(resultData.message);
+				} else {
+					setAdmin(resultData.admin);
+					setAuthenticated(true);
+					setErrorMsg('');
+					navigate("/");
+				}
+			});
 
 
 
@@ -232,28 +236,35 @@ export function JwtSignInView() {
 				/>
 			</Box>
 
+			{requireAdminAuth && (
+				<Box gap={1.5} display="flex" flexDirection="row">
 
-			<Box gap={1.5} display="flex" flexDirection="row">
-
-				<Field.Text
-					name="auth_code"
-					label="인증 번호"
-					InputLabelProps={{ shrink: true }}
-					onChange={(e) => setAuthCode(e.target.value)}
-				/>
+					<Field.Text
+						name="auth_code"
+						label="인증 번호"
+						InputLabelProps={{ shrink: true }}
+						onChange={(e) => setAuthCode(e.target.value)}
+					/>
 
 
-				<LoadingButton
-					fullWidth
-					color="inherit"
-					size="large"
-					type="button"
-					variant="contained"
-					onClick={sendEmail}
-				>
-					인증번호 발송
-				</LoadingButton>
-			</Box>
+					<LoadingButton
+						fullWidth
+						color="inherit"
+						size="large"
+						type="button"
+						variant="contained"
+						onClick={sendEmail}
+					>
+						인증번호 발송
+					</LoadingButton>
+				</Box>
+			)}
+
+			{!requireAdminAuth && (
+				<Alert severity="warning" sx={{ mb: 2 }}>
+					🔓 개발 모드: 이메일 인증이 비활성화되었습니다.
+				</Alert>
+			)}
 
 
 			<LoadingButton

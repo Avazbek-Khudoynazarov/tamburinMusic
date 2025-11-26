@@ -44,7 +44,7 @@ function MemberEdit() {
 
       const result = await MemberService.addAttachment(data);
       if (result) {
-        setMember({ ...member, image_file: result });
+        setMember({ ...member, image_file: result.url || result.path || result });
       }
     }
   }
@@ -83,7 +83,7 @@ function MemberEdit() {
                 {member.image_file !== '' ? (
                   <img
                     alt=""
-                    src={`${import.meta.env.VITE_STORE_SERVER_ADDRESS}/${member.image_file}`}
+                    src={member.image_file.startsWith('http') ? member.image_file : `${import.meta.env.VITE_STORE_SERVER_ADDRESS}/${member.image_file}`}
                     width={100}
                     height={100}
                   />

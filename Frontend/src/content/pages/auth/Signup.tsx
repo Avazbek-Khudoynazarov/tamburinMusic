@@ -63,7 +63,8 @@ function Signup() {
 
 	const [isSubmittingForm, setIsSubmittingForm] = useState(false);
 
-
+	// Email verification bypass for local development
+	const requireEmailVerification = import.meta.env.VITE_REQUIRE_EMAIL_VERIFICATION !== 'false';
 
 	const defaultValues: Member = {
 		id: 0,
@@ -132,6 +133,10 @@ function Signup() {
 
 	useEffect(() => {
 		loadInitialData();
+		// Auto-certify if email verification is disabled
+		if (!requireEmailVerification) {
+			setCertify(true);
+		}
 	}, []);
 
 
@@ -157,7 +162,14 @@ function Signup() {
 			}
 
 			// 이메일 인증 마지막으로 체크
-			const resultCertify = await MemberService.isCertifyEmail(userId ?? '', authCode);
+			let resultCertify;
+			if (requireEmailVerification) {
+				resultCertify = await MemberService.isCertifyEmail(userId ?? '', authCode);
+			} else {
+				// Bypass email verification for local development
+				resultCertify = [{ id: 1 }]; // Mock successful verification
+			}
+
 			if (resultCertify && resultCertify.length > 0 && resultCertify[0].id) {
 
 				const payload = {
@@ -431,16 +443,21 @@ function Signup() {
 							<li className="header">
 								<h1>1. 이메일 인증</h1>
 								<p className="notice">※ 학부모(보호자)이신가요 자녀(학생)의 정보 기준으로 가입해 주세요.</p>
+								{!requireEmailVerification && (
+									<p style={{ color: '#f26522', fontSize: '14px', fontWeight: 'bold', marginTop: '10px' }}>
+										🔓 개발 모드: 이메일 인증이 비활성화되었습니다.
+									</p>
+								)}
 							</li>
 							<li>
 								<div className="form-group">
 									<div className="txt-cont">
 										<label>이메일 주소</label>
-										<input type="text" placeholder="탬버린에서 쓸 아이디" {...register('user_id')} readOnly={certify} />
+										<input type="text" placeholder="탬버린에서 쓸 아이디" {...register('user_id')} readOnly={certify && requireEmailVerification} />
 										{errors.user_id && <p style={{ color: 'red', fontSize: '14px', paddingLeft: '5px', paddingBottom: '10px' }}>{errors.user_id.message}</p>}
 									</div>
 									{
-										!certify && (
+										!certify && requireEmailVerification && (
 											<>
 												<button type="button" className="btn-certify" onClick={() => sendEmail()}>이메일 인증</button>
 												{

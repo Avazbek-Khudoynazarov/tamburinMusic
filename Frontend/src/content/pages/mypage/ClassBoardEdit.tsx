@@ -109,7 +109,7 @@ function ClassBoardEdit() {
 					const formData = new FormData();
 					formData.append('file', file);
 					const response = await ClassesBoardService.addAttachment(formData);
-					const fileUrl = `${import.meta.env.VITE_SERVER_URL}/uploads/classesBoard/${response.filename}`;
+					const fileUrl = response.url || response.path; // S3 URL from backend
 					const attachmentPayload: Attachment = {
 						entity_type: 'classesBoard',
 						entity_id: Number(id),

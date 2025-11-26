@@ -110,7 +110,7 @@ function ClassBoardCreate() {
 						const item = {
 							entity_type: 'classesBoard',
 							entity_id: result.insertId,
-							file: `${import.meta.env.VITE_SERVER_URL}/uploads/classesBoard/${response.filename}`,
+							file: response.url || response.path, // S3 URL from backend
 							file_original: file.name,
 							file_size: file.size,
 							created_date: new Date(),
