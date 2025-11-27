@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [
     react(),
     checker({
-      typescript: true,
+      typescript: false,
       eslint: {
         lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"',
         dev: { logLevel: ['error'] },

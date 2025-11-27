@@ -1,10 +1,10 @@
-import { Router, Request, Response } from 'express';
-import { verifyToken } from '../authorization';
-import { S3StorageService } from '../services/s3-service';
-import multerS3 from 'multer-s3';
-import multer from 'multer';
-import dayjs from 'dayjs';
-import fs from 'fs';
+import { Router, Request, Response } from "express";
+import { verifyToken } from "../authorization";
+import { S3StorageService } from "../services/s3-service";
+import multerS3 from "multer-s3";
+import multer from "multer";
+import dayjs from "dayjs";
+import fs from "fs";
 
 const router = Router();
 
@@ -13,52 +13,64 @@ const storageService = new S3StorageService();
 
 // S3 File Upload Configuration
 const upload_s3 = multer({
-    storage: multerS3({
-        s3: storageService.GetS3Client(),
-        bucket: storageService.getBucketName(),
-        key: function (req: Request, file, cb) {
-            let folder: string = req.path.substring(1).split('/')[1];
-            var destFile = folder + '/' + folder + '_[' + dayjs().format('YYYY-MM-DD') + ']_' + dayjs().format('HH_mm_ss') + '_' + file.originalname;
-            cb(null, destFile);
-        },
-        acl: 'public-read',
-        contentType: multerS3.AUTO_CONTENT_TYPE,
-    }),
-    limits: {
-        files: 15,
-        fileSize: 1024 * 1024 * 20, //20MB
-    }
+  storage: multerS3({
+    s3: storageService.GetS3Client(),
+    bucket: storageService.getBucketName(),
+    key: function (req: Request, file, cb) {
+      let folder: string = req.path.substring(1).split("/")[1];
+      var destFile =
+        folder +
+        "/" +
+        folder +
+        "_[" +
+        dayjs().format("YYYY-MM-DD") +
+        "]_" +
+        dayjs().format("HH_mm_ss") +
+        "_" +
+        file.originalname;
+      cb(null, destFile);
+    },
+    acl: "public-read",
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+  }),
+  limits: {
+    files: 15,
+    fileSize: 1024 * 1024 * 20, //20MB
+  },
 });
 
 // S3 파일 업로드
-router.use('/data/:folder', verifyToken);
-router.post('/data/:folder', upload_s3.single('file'), async (request: Request, response: Response) => {
+router.use("/data/:folder", verifyToken);
+router.post(
+  "/data/:folder",
+  upload_s3.single("file"),
+  async (request: Request, response: Response) => {
     // #swagger.tags = ['upload']
     try {
-        if (!request.file) {
-            return response.status(400).send('파일이 업로드되지 않았습니다.');
-        }
+      if (!request.file) {
+        return response.status(400).send("파일이 업로드되지 않았습니다.");
+      }
 
-        // S3에 업로드된 파일 정보
-        const s3File = request.file as any;
-        const fileUrl = s3File.location; // S3 파일 URL
-        const fileKey = s3File.key; // S3 파일 키
+      // S3에 업로드된 파일 정보
+      const s3File = request.file as any;
+      const fileUrl = s3File.location; // S3 파일 URL
+      const fileKey = s3File.key; // S3 파일 키
 
-        if (!fileUrl || !fileKey) {
-            throw new Error('파일 정보가 올바르지 않습니다.');
-        }
+      if (!fileUrl || !fileKey) {
+        throw new Error("파일 정보가 올바르지 않습니다.");
+      }
 
-        response.status(200).send({
-            filename: fileKey,
-            url: fileUrl,
-            path: fileUrl
-        });
+      response.status(200).send({
+        filename: fileKey,
+        url: fileUrl,
+        path: fileUrl,
+      });
     } catch (error) {
-        console.error('파일 업로드 에러:', error);
-        response.status(500).send('파일 업로드 중 오류가 발생했습니다.');
+      console.error("파일 업로드 에러:", error);
+      response.status(500).send("파일 업로드 중 오류가 발생했습니다.");
     }
-});
-
+  }
+);
 
 // ==================== LOCAL STORAGE (DISABLED) ====================
 // Uncomment below to switch back to local file storage
@@ -114,7 +126,7 @@ router.post('/data/:folder', upload_s3.single('file'), async (request: Request, 
 // });
 // ==================== END LOCAL STORAGE ====================
 
-// const s3upload_images = multer({ 
+// const s3upload_images = multer({
 //     storage: multerS3({
 //         s3: storageService.GetS3Client(),
 //         bucket: 'tamburin-store', //버킷 이름.
@@ -124,7 +136,7 @@ router.post('/data/:folder', upload_s3.single('file'), async (request: Request, 
 //             cb(null, destFile );
 //         },
 //         acl: 'public-read', //객체 읽기 권한.
-//     }), 
+//     }),
 //     limits: {
 //         files: 15,
 //         fileSize: 1024 * 1024 * 20, //20MB.
@@ -148,7 +160,7 @@ router.post('/data/:folder', upload_s3.single('file'), async (request: Request, 
 //         response.status(200).send('success');
 //         return;
 //     }
-    
+
 //     const result = await storageService.deleteObject(file);
 //     if(result) {
 //         response.status(200).send('success');
@@ -162,7 +174,7 @@ router.post('/data/:folder', upload_s3.single('file'), async (request: Request, 
 // router.delete('/folder', async (request: Request, response: Response) => {
 //     // #swagger.tags = ['upload']
 //     let folder: string = request.query.folder as string; //맨 앞의 '/' 제거.(ex: /images/user => images/user)
-    
+
 //     const result = await storageService.deleteContainer(folder, null);
 //     if(result) {
 //         response.status(200).send('success');

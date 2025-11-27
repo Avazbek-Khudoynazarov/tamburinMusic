@@ -541,7 +541,7 @@ function Home() {
 					<div className="home-contact">
 						<div className="btn_area">
 							<a href="tel:1533-7430">고객 센터  1533-7430</a>
-							<a href="http://pf.kakao.com/_UPqrb" target="_blank">카카오톡  @탬버린 뮤직</a>
+							<a href="https://pf.kakao.com/_UPqrb" target="_blank">카카오톡  @탬버린 뮤직</a>
 						</div>
 
 					</div>

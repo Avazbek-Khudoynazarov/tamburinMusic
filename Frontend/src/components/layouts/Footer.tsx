@@ -51,7 +51,7 @@ function Footer() {
 				</div>
 			</footer>
 			<div className="side-social">
-				<a href="http://pf.kakao.com/_UPqrb" target="_blank">
+				<a href="https://pf.kakao.com/_UPqrb" target="_blank">
 					<img src="/images/icon/btn/btn_kakao.png" alt="" />
 				</a>
 			</div>

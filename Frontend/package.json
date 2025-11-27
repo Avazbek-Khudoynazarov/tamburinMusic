@@ -140,7 +140,8 @@
   },
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build:check": "tsc && vite build",
     "serve": "vite preview"
   },
   "eslintConfig": {

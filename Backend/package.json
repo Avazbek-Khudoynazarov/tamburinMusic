@@ -7,7 +7,7 @@
     "build": "tsc -p .",
     "serve": "node dist/index.js",
     "start": "tsc && node dist",
-    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/index.ts"
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"node --max-old-space-size=4096 -r ts-node/register\" src/index.ts"
   },
   "author": "",
   "license": "ISC",
